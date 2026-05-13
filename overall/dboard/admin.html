@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../admin.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>RealEstate</h3>
+        <a href="#" class="active">Overview</a>
+        <a href="#">Users List</a>
+        <a href="#">Properties</a>
+        <a href="#">Settings</a>
+        <a href="logout.php" class="btn-logout">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <div>
+                <h2>Admin Dashboard</h2>
+                <p style="color: #64748b;">Welcome back, <?php echo $_SESSION['username']; ?></p>
+            </div>
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff" alt="avatar" style="border-radius: 50%; width: 40px;">
+            </div>
+        </header>
+
+        <div class="card-grid">
+            <div class="card">
+                <h4>Total Users</h4>
+                <div class="value">124</div>
+            </div>
+            <div class="card" style="border-left-color: #10b981;">
+                <h4>Active Sellers</h4>
+                <div class="value">85</div>
+            </div>
+            <div class="card" style="border-left-color: #f59e0b;">
+                <h4>Pending Brokers</h4>
+                <div class="value">12</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <h3>Recent Activities</h3>
+            <p style="margin-top: 15px; color: #64748b;">No recent alerts found.</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

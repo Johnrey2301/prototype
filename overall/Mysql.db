@@ -1,0 +1,28 @@
+-- 1. Create the Database
+CREATE DATABASE IF NOT EXISTS real_estate_db;
+USE real_estate_db;
+
+-- 2. Create Roles Table
+CREATE TABLE IF NOT EXISTS roles (
+    roleId INT PRIMARY KEY AUTO_INCREMENT,
+    roleName VARCHAR(50) NOT NULL
+);
+
+-- 3. Insert the required roles
+INSERT INTO roles (roleName) VALUES ('admin'), ('seller'), ('broker');
+
+-- 4. Create Users Table
+CREATE TABLE IF NOT EXISTS users (
+    userId INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    roleId INT,
+    CONSTRAINT fk_role FOREIGN KEY (roleId) REFERENCES roles(roleId)
+);
+
+-- 5. Add dummy accounts (Password is '12345' for all)
+-- In a real app, use password_hash() in PHP. 
+INSERT INTO users (username, password, roleId) VALUES 
+('admin_user', '12345', 1),
+('seller_user', '12345', 2),
+('broker_user', '12345', 3);
