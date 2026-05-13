@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Partner Portal</title>
+    <!-- Eto yung bagong CSS -->
+    <link rel="stylesheet" href="../partner.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="logo-section">
+            <div class="logo-box">RE</div>
+            <h2 style="font-size: 1.1rem;">Partner Portal</h2>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 25px;">
+            <div style="text-align: right;">
+                <p style="font-weight: 700; font-size: 0.9rem;"><?php echo $_SESSION['username']; ?></p>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">
+                    ID: #00<?php echo $_SESSION['roleId']; ?>
+                </p>
+            </div>
+            <a href="logout.php" class="btn-logout">Logout</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="welcome-header">
+            <h1>Good Day, <?php echo $_SESSION['username']; ?>!</h1>
+            <p style="color: var(--text-muted);">Monitor your real estate performance here.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-label">ACTIVE LISTINGS</p>
+                <p class="stat-value">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">TOTAL VIEWS</p>
+                <p class="stat-value">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">EARNINGS (EST.)</p>
+                <p class="stat-value">₱0.00</p>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>My Property Listings</h3>
+                <button class="btn-primary">+ Add New Property</button>
+            </div>
+            
+            <div class="table-placeholder">
+                <p>You haven't added any properties yet.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
