@@ -8,12 +8,19 @@
 </head>
 <body>
     <div class="login-container">
-        <form action="../php/signup.php" method="POST">
+        <div id="auth-message" style="display:none;"></div>
 
+        <form action="../php/signup.php" method="POST">
             <h2>Sign Up</h2>
 
-            <input type="text" name="username" placeholder="Username" required>
+            <input type="text" name="firstname" placeholder="Firstname" required>
+            <input type="text" name="lastname" placeholder="Lastname" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="phonenumber" placeholder="Phone number" required>
+
             <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Re-enter Password" required>
+
             <button type="submit">Create Account</button>
 
             <div style="margin-top: 10px; text-align:center; color: var(--muted); font-weight: 600;">
@@ -22,6 +29,8 @@
             </div>
         </form>
     </div>
+
+    <script src="./js/auth.js" defer></script>
 </body>
 </html>
 

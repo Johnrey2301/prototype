@@ -5,63 +5,77 @@ include('connection.php');
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $user = mysqli_real_escape_string($conn, $_POST['username'] ?? '');
-    $pass = $_POST['password'] ?? '';
+    $firstname   = trim($_POST['firstname'] ?? '');
+    $lastname    = trim($_POST['lastname'] ?? '');
+    $email       = trim($_POST['email'] ?? '');
+    $phonenumber = trim($_POST['phonenumber'] ?? '');
 
-    if ($user === '' || $pass === '') {
-        $error = "Please fill out username and password.";
+    $pass  = $_POST['password'] ?? '';
+    $pass2 = $_POST['password2'] ?? '';
+
+    if ($firstname === '' || $lastname === '' || $email === '' || $phonenumber === '') {
+        $error = "Please fill out firstname, lastname, email, and phone number.";
+    } else if ($pass === '' || $pass2 === '') {
+        $error = "Please fill out password.";
+    } else if ($pass !== $pass2) {
+        $error = "Passwords do not match.";
     } else {
-        // Check if username already exists
-        $checkSql = "SELECT id FROM users WHERE username = '$user' LIMIT 1";
-        $checkRes = mysqli_query($conn, $checkSql);
+        $roleId = 2; // default broker
 
-        if (mysqli_num_rows($checkRes) > 0) {
-            $error = "Username already exists!";
+        // Check if email already exists (prepared statement)
+        $checkStmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ? LIMIT 1");
+        if (!$checkStmt) {
+            $error = "Server error (prepare failed).";
         } else {
-// Create user
-            // In your schema, roles mapping is:
-            // roleId=1 admin, roleId=2 broker (partner dashboard), roleId=3 seller (partner dashboard)
-            // We default new signups to roleId=2 (broker) -> partner dashboard.
-            $roleId = 2;
-            $insertSql = "INSERT INTO users (username, password, roleId) VALUES ('$user', '$pass', $roleId)";
+            mysqli_stmt_bind_param($checkStmt, 's', $email);
+            mysqli_stmt_execute($checkStmt);
+            $checkRes = mysqli_stmt_get_result($checkStmt);
 
-
-            $insertRes = mysqli_query($conn, $insertSql);
-
-            if ($insertRes) {
-                // Auto-login newly created user
-                $loginSql = "SELECT * FROM users WHERE username = '$user' AND password = '$pass'";
-                $loginRes = mysqli_query($conn, $loginSql);
-
-                if (mysqli_num_rows($loginRes) === 1) {
-                    $row = mysqli_fetch_assoc($loginRes);
-                    $_SESSION['username'] = $row['username'];
-                    $_SESSION['roleId'] = $row['roleId'];
-
-                    // Success: return to login page (as requested)
-                    // (login.php will redirect to admin_dashboard.php or partner_dashboard.php based on roleId)
-                    header("Location: ../overall/dboard/login.html?signup=success");
-
-                    // If you are serving dboard directly, you may also open ../dboard/login.html.
-                    // (kept as-is to match your existing login redirect approach)
-
-                    exit();
-
-                }
-
-                $error = "Account created but redirect failed.";
+            if ($checkRes && mysqli_num_rows($checkRes) > 0) {
+                $error = "Email already exists!";
             } else {
-                $error = "Failed to create account.";
+                // Insert user (prepared statement)
+                $insertStmt = mysqli_prepare(
+                    $conn,
+                    "INSERT INTO users (firstname, lastname, email, phonenumber, password, roleId)
+                     VALUES (?, ?, ?, ?, ?, ?)"
+                );
+
+                if (!$insertStmt) {
+                    $error = "Server error (prepare failed).";
+                } else {
+                    mysqli_stmt_bind_param(
+                        $insertStmt,
+                        'sssssi',
+                        $firstname,
+                        $lastname,
+                        $email,
+                        $phonenumber,
+                        $pass,
+                        $roleId
+                    );
+
+                    $ok = mysqli_stmt_execute($insertStmt);
+
+                    if ($ok) {
+                        $_SESSION['email'] = $email;
+                        $_SESSION['roleId'] = $roleId;
+
+                        header("Location: ../dboard/login.html?signup=success");
+                        exit();
+                    }
+
+                    $error = "Failed to create account.";
+                }
             }
         }
     }
 }
 
-
-// If there was an error, show a simple message and send back to signup page
 if ($error !== "") {
-    echo "<script>alert(" . json_encode($error) . "); window.location.href = '../overall/signup.html';</script>";
+    echo "<script>alert(" . json_encode($error) . "); window.location.href = '../dboard/signup.html';</script>";
     exit();
 }
 ?>
+
 
